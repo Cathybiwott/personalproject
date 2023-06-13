@@ -1,37 +1,34 @@
-// Define the base URL of the API
-const BASE_URL = "https://example.com/api";
+fetch('https://dummyjson.com/users')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error(error));
 
-// Define the function to register a complaint
-function registerComplaint(event) {
+
+const form = document.getElementById('complaint-form');
+const message = document.getElementById('message');
+
+form.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  // Get the complaint data from the form
-  const title = document.getElementById("title").value;
-  const description = document.getElementById("description").value;
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const complaint = document.getElementById('complaint').value;
+  const anonymous = document.getElementById('anonymous').checked;
 
-  // Make a POST request to the API
-  fetch(`${BASE_URL}/complaints`, {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer <access_token>",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ title, description }),
-  })
-    .then(response => {
-      if (response.ok) {
-        // The complaint was registered successfully
-        document.getElementById("response").innerHTML = "Complaint registered successfully.";
-      } else {
-        // An error occurred
-        throw new Error(response.status);
-      }
-    })
-    .catch(error => {
-      document.getElementById("response").innerHTML = `Error registering complaint: ${error.message}`;
-    });
-}
+  if (!anonymous && (!name || !email)) {
+    message.innerHTML = 'Please enter your name and email.';
+    message.style.backgroundColor = '#f44336';
+    return;
+  }
 
-// Add an event listener to the form
-document.getElementById("complaint-form").addEventListener("submit", registerComplaint);
+  if (!complaint) {
+    message.innerHTML = 'Please enter your complaint.';
+    message.style.backgroundColor = '#f44336';
+    return;
+  }
+
+  message.innerHTML = 'Complaint registered successfully.';
+  message.style.backgroundColor = '#4CAF50';
+});
+
 
